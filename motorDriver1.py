@@ -5,6 +5,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
 pines = [24,25,8,7]
+#prueba
 
 for pin in pines:
     GPIO.setup(pin,GPIO.OUT)
