@@ -6,6 +6,7 @@ GPIO.setwarnings(False)
 
 pines = [24,25,8,7]
 #prueba
+#chido
 
 for pin in pines:
     GPIO.setup(pin,GPIO.OUT)
