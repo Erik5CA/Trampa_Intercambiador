@@ -5,7 +5,7 @@ import mqttBMP as BMP
 import mqttDHT as DHT
 import mqttMotor as Motor
 
-def on_connect(client, userdata, flags, rc):
+def on_connect(client, userdata, flags, rc): ##comentario
     print("Connected with result code "+str(rc))
     client.subscribe("trampa/#")
 
