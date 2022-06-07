@@ -1,4 +1,4 @@
-
+#Motor driver 2
 import time                     #Para las pausas
 import RPi.GPIO as GPIO
 

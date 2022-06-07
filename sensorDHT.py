@@ -1,3 +1,4 @@
+#Sensor DHT
 import Adafruit_DHT as DHT
 import time
 
