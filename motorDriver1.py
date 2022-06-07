@@ -1,5 +1,5 @@
 #Motor Driver 1
-import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO #Importamos libreria GPIO
 import time
 
 GPIO.setmode(GPIO.BCM)
