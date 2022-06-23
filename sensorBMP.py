@@ -7,6 +7,11 @@
 import Adafruit_BMP.BMP085 as BMP
 import time
 
+
+#pines configurados
+#SDA = GPIO 2 (SDA I2C)
+#SCL = GPIO 3 (SCL I2C)
+
 sensorBmp = BMP.BMP085()
 tempBmp = sensorBmp.read_temperature()
 presBmp = sensorBmp.read_pressure()
