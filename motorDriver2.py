@@ -7,15 +7,17 @@ GPIO.setmode(GPIO.BCM)        #Usar la numeracion de GPIO
 
 pinDir = 27                    #Pin DIR
 pinStep = 22                    #Pin Step
-# numSteps = 200                  #Numero de pasos del motor
-# microPausa = 0.005              #Numero de segundos de pausa
+pinHab = 17
+numSteps = 250                  #Numero de pasos del motor
+microPausa = 0.005              #Numero de segundos de pausa
 
-
+GPIO.setup(pinHab,GPIO.OUT)
 GPIO.setup(pinDir,GPIO.OUT)
 GPIO.setup(pinStep,GPIO.OUT)
 
 
 def adelante(tiempo,numSteps):
+    GPIO.output(pinHab,0)
     GPIO.output(pinDir,0)
     for x in range(0,numSteps):
         GPIO.output(pinStep, True)
@@ -24,6 +26,7 @@ def adelante(tiempo,numSteps):
         time.sleep(tiempo)
 
 def atras(tiempo,numSteps):
+    GPIO.output(pinHab,0)
     GPIO.output(pinDir, 1)         
     for x in range(0,numSteps):
         GPIO.output(pinStep, True)
@@ -34,3 +37,8 @@ def atras(tiempo,numSteps):
 def reset():
     GPIO.output(pinDir,0)
     GPIO.output(pinStep,0)
+    GPIO.output(pinHab,1)
+
+adelante(microPausa,numSteps)
+reset()
+

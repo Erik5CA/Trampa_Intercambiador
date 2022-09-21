@@ -1,4 +1,3 @@
-#Sensor BMP
 #1. Comando sudo raspi-config
 #2. Interfacing -> I2C
 #3. Comando sudo reboot

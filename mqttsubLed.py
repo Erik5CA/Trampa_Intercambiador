@@ -1,4 +1,3 @@
-#Prueba LED MQTT
 import paho.mqtt.client as mqtt
 import RPi.GPIO as GPIO
 import time

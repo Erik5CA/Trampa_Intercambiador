@@ -1,16 +1,15 @@
+
 import paho.mqtt.client as mqtt
 import RPi.GPIO as GPIO
 import time
 import mqttBMP as BMP
 import mqttDHT as DHT
-import mqttMotor as Motor
 import carrusel
-
+import mqttMotor as Motor
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
     client.subscribe("trampa/#") 
-
 
 try:
     client = mqtt.Client()
@@ -24,7 +23,8 @@ try:
 
 except KeyboardInterrupt:
     posiciones = open("posicion.txt", "wt")
-    posiciones.write(str(carrusel.pos_ini)+"\n"+str(carrusel.pos_fin))
+    posiciones.write(str(carrusel.pos_ini)+"\n"+str(carrusel.pos_fin)+"\n"+str(carrusel.dir))
     posiciones.close()
-    Motor.motorDriver2.reset()
+    Motor.motorDriver1.reset()
     GPIO.cleanup()
+
