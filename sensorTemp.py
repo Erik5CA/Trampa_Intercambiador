@@ -1,16 +1,23 @@
+# ESTE SENSOR SE ALIMENTA CON 5 [V]
+# Pines del sensor, vista desde abajo: (V+   Vout    GND)
 
 from gpiozero import MCP3008
 import time
 
-lm = MCP3008(1)
+lm = MCP3008(0)
 
-try:
-    while(1):
-        volLm = lm.voltage
-        tempLm = lm.voltage*100
-        print("El voltaje es: " + str(volLm)+ " V \n")
-        print("La temperatura es: " + str(tempLm)+ " °C \n")
-        time.sleep(2)
+def temperatura(opt):
+    if opt:
+        return lm.voltage*100
+    else:
+        return lm.voltage, lm.voltage*100
 
-except KeyboardInterrupt:
-    lm.close()
+if __name__ == '__main__':
+    try:
+        while True:
+            V,T = temperatura(False)
+            print(f"El voltaje es: {V}")
+            print(f"La temperatura es: {T}")
+            time.sleep(2)
+    except KeyboardInterrupt:
+        lm.close()
