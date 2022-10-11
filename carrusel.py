@@ -1,42 +1,29 @@
-#Control del carrusel
-import motorDriver1 as M2
-import mqttMotor
-import estadoFrasco as edo
+# Control del carrusel para la posicion inicial
+import motorDriver2 as M2
 
-#import motorDriver2 as M2
-#impor motorDriver1 
-posiciones = open("posicion.txt", "rt")
-pos_ini = int(posiciones.readline())
-pos_fin = int(posiciones.readline())
-#dir = int(posiciones.readline()) #Variable a leer para obtener direccion del carruser y comparara para hacer la conversion
-posiciones.close()
+with open("posicion.txt", "rt") as f:
+    lis_pos = f.readlines()
+    pos_ini = int(lis_pos[0])
+    pos_fin = int(lis_pos[1])
 
-tiempo = 0.0001
-numSteps = 25
+# tiempo = 0.005
+# numSteps = 250
+
+act = True
 
 def default(x,y):
     diferencia = y - x
     return diferencia
 
-dif = default(pos_ini,pos_fin)
-if dif != 0:
-    pos_fin = 1
-    M2.movMotor(tiempo,dif*numSteps,False,0)
-    posiciones = open("posicion.txt", "wt")
-    posiciones.write(str(pos_ini)+"\n"+str(pos_fin)+"\n"+'0')
-    posiciones.close()
-    #mov = True
-else:
-    print("Ya estas en la posición 1")
-    #mov = False
-
-def actulizarpos():
+def actualizar(pos_ini,pos_fin,tiempo,numSteps):
+    dif = default(pos_ini,pos_fin)
     if dif != 0:
         pos_fin = 1
-        motorDriver1.movMotor(tiempo,dif*numSteps,False,apu)
-        #M2.adelante(tiempo,dif*numSteps)
-        posiciones = open("posicion.txt", "wt")
-        posiciones.write(str(pos_ini)+"\n"+str(pos_fin))
-        posiciones.close()
+        M2.front(tiempo,dif*numSteps)           # Hay que mandar la diferencia y manejarla desde el mqttMotor2
+
+        with open("posicion.txt", "wt") as f:
+            f.writelines(f'{pos_ini}\n{pos_fin}')
+        return False
     else:
-        print("Ya estas en la posición 1")
+        print("\nYa estas en la posicion 1")
+        return False
