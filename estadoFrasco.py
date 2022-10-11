@@ -5,11 +5,10 @@ def estadoFrasco(client, userdata, msg):
     for i in range(0,8):
         if frascos['frasco'][i] == msg.payload.decode():
             client.publish("trampa/frasco/estado", frascos['estado'][i])
-            client.publish("trampa/frasco/actual", "Frasco: " + str(i+1))
+            client.publish("trampa/frasco/actual", f"Frasco: {i+1}")
 
 def estadoFSA(pos,client, userdata, msg):
     for i in range(0,8):
         if frascos['frasco'][i] == str(pos):
             client.publish("trampa/frasco/estado", frascos['estado'][i])
-            client.publish("trampa/frasco/actual", "Frasco: " + str(i+1))
-
+            client.publish("trampa/frasco/actual", f"Frasco: {i+1}")
