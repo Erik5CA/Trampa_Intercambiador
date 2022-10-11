@@ -1,122 +1,106 @@
-
-import motorDriver1
-import carrusel 
+import motorDriver2 as M2
+import carrusel as car
 import estadoFrasco as edo
 
-pasos = 25
-tiempo = 0.0001
-apu = 0
+pasos = 250
+tiempo = 0.005
 
-def mover(posI,posF,apu):
+def move_position(posI,posF):
     if posF == 1 and posI == 8:
-        if carrusel.dir == 0:
-            motorDriver1.movMotor(tiempo,pasos,False,apu)
-        else:
-            motorDriver1.conv(apu,False)
-            motorDriver1.movMotor(tiempo,pasos,False,apu)
+        M2.front(tiempo,pasos)
     elif posF == 8 and posI == 1:
-        if carrusel.dir == 1:
-            motorDriver1.movMotor(tiempo,pasos,True,apu)
-        else:
-            motorDriver1.conv(apu,True)
-            motorDriver1.movMotor(tiempo,pasos,True,apu)
+        M2.back(tiempo,pasos)
     elif posF < posI:
         dif = posI - posF
-        if carrusel.dir == 1:
-            motorDriver1.movMotor(tiempo,dif*pasos,True,apu)
-        else:
-            motorDriver1.conv(apu,True)
-            motorDriver1.movMotor(tiempo,dif*pasos,True,apu)
+        M2.back(tiempo,dif*pasos)
     else:
         dif = posF - posI
-        if carrusel.dir == 0:
-            motorDriver1.movMotor(tiempo,dif*pasos,False,apu)
-        else:
-            motorDriver1.conv(apu,False)
-            motorDriver1.movMotor(tiempo,dif*pasos,False,apu)
+        M2.front(tiempo,dif*pasos)
 
-def actualizar_pos(posF):
-    posiciones = open("posicion.txt", "wt")
-    posiciones.write("1"+"\n"+str(posF)+"\n"+str(carrusel.dir))
-    posiciones.close()
+def update_position(posF):
+    with open("posicion.txt", "wt") as f:
+        f.writelines(f'1\n{posF}')
 
-def on_message(client, userdata, msg):
-    if carrusel.mov:
-        client.publish("trampa/frasco/estado", edo.frascos['estado'][0])
-        client.publish("trampa/frasco/actual", "Frasco: " + str(1))
-        carrusel.mov = False
-    print(msg.topic+" "+str(msg.payload))
-    if msg.payload.decode() == 'front': ##decode() para recibir el string
-        if carrusel.dir == 0:
-            motorDriver1.movMotor(tiempo,pasos,False,apu)
+def on_message_MOTOR(client, userdata, msg):
+    if car.act:
+        car.act = car.actualizar(car.pos_ini,car.pos_fin,tiempo,pasos)  # Esta linea mueve el frasco a la posicion 1
+        update_position('1')
+        edo.estadoFSA('1',client, userdata, msg)
+    
+    print(f'{msg.topic}\t{msg.payload}')
+
+    if msg.payload.decode() == 'front':             # Para recibir el string
+        M2.front(tiempo,pasos)
+        if car.pos_fin == 6:
+            car.pos_fin = 1
         else:
-            motorDriver1.conv(apu,False)
-            motorDriver1.movMotor(tiempo,pasos,False,apu)
-        if carrusel.pos_fin == 8:
-            carrusel.pos_fin = 1
-        else:
-            carrusel.pos_fin += 1
-        actualizar_pos(carrusel.pos_fin)
-        edo.estadoFSA(carrusel.pos_fin,client, userdata, msg)
-        motorDriver1.reset()
+            car.pos_fin += 1
+        update_position(car.pos_fin)
+        edo.estadoFSA(car.pos_fin,client, userdata, msg)
+        M2.reset()
+
     if msg.payload.decode() == 'back':
-        if carrusel.dir == 1:
-            motorDriver1.movMotor(tiempo,pasos,True,apu)
+        M2.back(tiempo,pasos)
+        if car.pos_fin == 1:
+            car.pos_fin = 6
         else:
-            motorDriver1.conv(apu,True)
-            motorDriver1.movMotor(tiempo,pasos,True,apu)
-        if carrusel.pos_fin == 1:
-            carrusel.pos_fin = 8
-        else:
-            carrusel.pos_fin -= 1
-        actualizar_pos(carrusel.pos_fin)  
-        edo.estadoFSA(carrusel.pos_fin,client, userdata, msg)
-        motorDriver1.reset()
+            car.pos_fin -= 1
+        update_position(car.pos_fin)  
+        edo.estadoFSA(car.pos_fin,client, userdata, msg)
+        M2.reset()
+
     if msg.payload.decode() == '1':
-        mover(carrusel.pos_fin,1,apu)
-        carrusel.pos_fin = 1
-        actualizar_pos(carrusel.pos_fin)
+        move_position(car.pos_fin,1)
+        car.pos_fin = 1
+        update_position(car.pos_fin)
         edo.estadoFrasco(client,userdata,msg)
-        motorDriver1.reset()
+        M2.reset()
+
     if msg.payload.decode() == '2':
-        mover(carrusel.pos_fin,2,apu)
-        carrusel.pos_fin = 2
-        actualizar_pos(carrusel.pos_fin)
+        move_position(car.pos_fin,2)
+        car.pos_fin = 2
+        update_position(car.pos_fin)
         edo.estadoFrasco(client,userdata,msg)
-        motorDriver1.reset()
+        M2.reset()
+
     if msg.payload.decode() == '3':
-        mover(carrusel.pos_fin,3,apu)
-        carrusel.pos_fin = 3
-        actualizar_pos(carrusel.pos_fin)
+        move_position(car.pos_fin,3)
+        car.pos_fin = 3
+        update_position(car.pos_fin)
         edo.estadoFrasco(client,userdata,msg)
-        motorDriver1.reset()
+        M2.reset()
+
     if msg.payload.decode() == '4':
-        mover(carrusel.pos_fin,4,apu)
-        carrusel.pos_fin = 4
-        actualizar_pos(carrusel.pos_fin)
+        move_position(car.pos_fin,4)
+        car.pos_fin = 4
+        update_position(car.pos_fin)
         edo.estadoFrasco(client,userdata,msg)
-        motorDriver1.reset()
+        M2.reset()
+
     if msg.payload.decode() == '5':
-        mover(carrusel.pos_fin,5,apu)
-        carrusel.pos_fin = 5
-        actualizar_pos(carrusel.pos_fin)
+        move_position(car.pos_fin,5)
+        car.pos_fin = 5
+        update_position(car.pos_fin)
         edo.estadoFrasco(client,userdata,msg)
-        motorDriver1.reset()
+        M2.reset()
+
     if msg.payload.decode() == '6':
-        mover(carrusel.pos_fin,6,apu)
-        carrusel.pos_fin = 6
-        actualizar_pos(carrusel.pos_fin)
+        move_position(car.pos_fin,6)
+        car.pos_fin = 6
+        update_position(car.pos_fin)
         edo.estadoFrasco(client,userdata,msg)
-        motorDriver1.reset()
+        M2.reset()
+
     if msg.payload.decode() == '7':
-        mover(carrusel.pos_fin,7,apu)
-        carrusel.pos_fin = 7
-        actualizar_pos(carrusel.pos_fin)
+        move_position(car.pos_fin,7)
+        car.pos_fin = 7
+        update_position(car.pos_fin)
         edo.estadoFrasco(client,userdata,msg)
-        motorDriver1.reset()
+        M2.reset()
+    
     if msg.payload.decode() == '8':
-        mover(carrusel.pos_fin,8,apu)
-        carrusel.pos_fin = 8
-        actualizar_pos(carrusel.pos_fin)
+        move_position(car.pos_fin,8)
+        car.pos_fin = 8
+        update_position(car.pos_fin)
         edo.estadoFrasco(client,userdata,msg)
-        motorDriver1.reset()
+        M2.reset()
