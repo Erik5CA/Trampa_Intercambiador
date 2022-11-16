@@ -1,9 +1,10 @@
 import motorDriver2 as M2
 import carrusel as car
 import estadoFrasco as edo
+import mqttSSR as SSR
 
 pasos = 250
-tiempo = 0.005
+tiempo = 0.00125
 
 def move_position(posI,posF):
     if posF == 1 and posI == 8:
@@ -104,3 +105,9 @@ def on_message_MOTOR(client, userdata, msg):
         update_position(car.pos_fin)
         edo.estadoFrasco(client,userdata,msg)
         M2.reset()
+    
+    # if msg.payload.decode() == 'on1':
+    #     SSR.SSR_operation(21,'on')
+    
+    # if msg.payload.decode() == 'off1':
+    #     SSR.SSR_operation(21,'off')
