@@ -14,11 +14,13 @@ def SSR_operation(pin,opt):
         GPIO.output(pin, GPIO.HIGH)
     elif opt == 'off':
         GPIO.output(pin, GPIO.LOW)
-    else: print('Error 404')
+    else: print('Ocurrio un error')
 
 # Funcion que lee el mensaje publicado en el topic boton y actua sobre los SSR
 def on_message_SSR(client, userdata, msg):
     message = msg.payload.decode()
+    print(f'\nMensaje: {message}')
+    
     if message == 'on1':
         SSR_operation(pin_SSR1,'on')
     elif message == 'off1':
@@ -27,7 +29,14 @@ def on_message_SSR(client, userdata, msg):
         SSR_operation(pin_SSR2,'on')
     elif message == 'off2':
         SSR_operation(pin_SSR2,'off')
-    else:   print('\nEsperando...')
+    else:   print(f'\nOcurrio un error {message}')
+
+def on_message_control_SSR(client, userdata, msg):
+    
+    message = msg.payload.decode()
+    
+    if message == 'ok':
+        SSR_operation(pin_SSR1)
 
 if __name__ == '__main__':
     SSR_operation(pin_SSR1,'on')
