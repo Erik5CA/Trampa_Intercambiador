@@ -9,8 +9,13 @@
 
 import Adafruit_BMP.BMP085 as BMP
 
-sensorBmp = BMP.BMP085()
-tempBmp = sensorBmp.read_temperature()
-presBmp = sensorBmp.read_pressure()
-altBmp = sensorBmp.read_altitude()
-presNmBmp = sensorBmp.read_sealevel_pressure()
+def datos():
+    try:
+        sensorBmp = BMP.BMP085()
+        tempBmp = sensorBmp.read_temperature()
+        presBmp = sensorBmp.read_pressure()
+        altBmp = sensorBmp.read_altitude()
+        presNmBmp = sensorBmp.read_sealevel_pressure()
+        return tempBmp,presBmp,altBmp,presNmBmp
+    except OSError:
+        print("\t\tSENSOR BMP DESCONECTADO")
